@@ -25,6 +25,7 @@ const VideoPlayer = (tempProps) => {
         duration: 0,
         state: props.videoProps.source ? PlaybackStates.Loading : PlaybackStates.Error,
     });
+    const [isFullscreenActive, setIsFullscreenActive] = useState(false);
     // We need to extract ref, because of misstypes in <Slider />
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const _a = props.slider, { ref: sliderRef } = _a, sliderProps = __rest(_a, ["ref"]);
@@ -175,6 +176,25 @@ const VideoPlayer = (tempProps) => {
                     : PlaybackStates.Playing }));
         }
     });
+    const singleTapOnMiddleBtn = () => {
+        togglePlay();
+    };
+    const doubleTapOnMiddleBtn = () => {
+        toggleFullscreen();
+    };
+    const toggleFullscreen = () => {
+        console.log('VideoPlayer toggleFullscreen');
+        if (isFullscreenActive) {
+            setIsFullscreenActive(false);
+            !props.onCancelFullscreen || props.onCancelFullscreen();
+        }
+        else {
+            setIsFullscreenActive(true);
+            !props.onTriggerFullscreen || props.onTriggerFullscreen();
+        }
+    };
+    //
+    // Render variants
     if (playbackInstanceInfo.state === PlaybackStates.Error) {
         return (<View style={{
                 backgroundColor: props.style.videoBackgroundColor,
@@ -228,11 +248,7 @@ const VideoPlayer = (tempProps) => {
                                     <MaterialIcons name='arrow-back' style={styles.iconSide} size={props.icon.size} color={props.icon.color}/>
                                 </View>
                             </TouchableButton>
-                            <DoubleClick singleTap={() => {
-            console.log("single tap");
-        }} doubleTap={() => {
-            console.log("double tap");
-        }} delay={200}>
+                            <DoubleClick singleTap={singleTapOnMiddleBtn} doubleTap={doubleTapOnMiddleBtn} delay={200}>
 
 
                                 <View>

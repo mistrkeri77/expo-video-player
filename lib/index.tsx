@@ -45,6 +45,7 @@ const VideoPlayer = (tempProps: Props) => {
         duration: 0,
         state: props.videoProps.source ? PlaybackStates.Loading : PlaybackStates.Error,
     })
+    const [isFullscreenActive, setIsFullscreenActive] = useState(false);
 
     // We need to extract ref, because of misstypes in <Slider />
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -227,6 +228,31 @@ const VideoPlayer = (tempProps: Props) => {
         }
     }
 
+    const singleTapOnMiddleBtn = () => {
+        togglePlay();
+    }
+    const doubleTapOnMiddleBtn = () => {
+        toggleFullscreen();
+    }
+
+    const toggleFullscreen = () => {
+        console.log('VideoPlayer toggleFullscreen');
+
+        if(isFullscreenActive){
+            setIsFullscreenActive(false);
+            !props.onCancelFullscreen || props.onCancelFullscreen();
+        }else{
+            setIsFullscreenActive(true);
+            !props.onTriggerFullscreen || props.onTriggerFullscreen();
+        }
+
+
+
+    }
+
+    //
+    // Render variants
+
     if (playbackInstanceInfo.state === PlaybackStates.Error) {
         return (
             <View
@@ -316,12 +342,8 @@ const VideoPlayer = (tempProps: Props) => {
                                 </View>
                             </TouchableButton>
                             <DoubleClick
-                                singleTap={() => {
-                                    console.log("single tap");
-                                }}
-                                doubleTap={() => {
-                                    console.log("double tap");
-                                }}
+                                singleTap={singleTapOnMiddleBtn}
+                                doubleTap={doubleTapOnMiddleBtn}
                                 delay={200}
                             >
 
