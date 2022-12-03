@@ -3,7 +3,7 @@ import {
     ActivityIndicator,
     Animated,
     StyleSheet,
-    Text,
+    Text, TouchableOpacity,
     TouchableWithoutFeedback,
     View,
 } from 'react-native'
@@ -17,12 +17,11 @@ import {
 } from './utils'
 import {MaterialIcons} from '@expo/vector-icons'
 import {Props, defaultProps} from './props'
-import {useEffect, useRef, useState} from 'react'
+import {Component, useEffect, useRef, useState} from 'react'
 import React from 'react'
 import Slider from '@react-native-community/slider'
 import {__awaiter} from "tslib";
-
-import DoubleClick from 'react-native-double-tap'
+import DoubleClick from "./DoubleClick";
 
 const VideoPlayer = (tempProps: Props) => {
     const DEFAULT_STEP_SIZE = 500;
@@ -234,18 +233,19 @@ const VideoPlayer = (tempProps: Props) => {
     const doubleTapOnMiddleBtn = () => {
         toggleFullscreen();
     }
-
+    const longPressOnMiddleBtn = () => {
+        console.log('VideoPlayer longPressOnMiddleBtn');
+    }
     const toggleFullscreen = () => {
         console.log('VideoPlayer toggleFullscreen');
 
-        if(isFullscreenActive){
+        if (isFullscreenActive) {
             setIsFullscreenActive(false);
             !props.onCancelFullscreen || props.onCancelFullscreen();
-        }else{
+        } else {
             setIsFullscreenActive(true);
             !props.onTriggerFullscreen || props.onTriggerFullscreen();
         }
-
 
 
     }
@@ -315,7 +315,10 @@ const VideoPlayer = (tempProps: Props) => {
                 {header}
             </Animated.View>
 
-            <TouchableWithoutFeedback onPress={animationShow}>
+            <TouchableWithoutFeedback
+                // onPress={animationShow}
+
+            >
                 <Animated.View
                     style={{
                         ...StyleSheet.absoluteFillObject,
@@ -333,9 +336,12 @@ const VideoPlayer = (tempProps: Props) => {
                     <View style={styles.iconWrapperOuter}
                           pointerEvents={controlsState === ControlStates.Visible ? 'auto' : 'none'}>
                         <View style={styles.iconWrapper}>
-                            <TouchableButton style={styles.touchableBtnSide} onPress={() => {
-                                shiftPosition(-DEFAULT_STEP_SIZE)
-                            }}>
+                            <TouchableButton
+                                style={styles.touchableBtnSide}
+                                onPress={() => {
+                                    shiftPosition(-DEFAULT_STEP_SIZE)
+                                }}
+                            >
                                 <View>
                                     <MaterialIcons name='arrow-back' style={styles.iconSide} size={props.icon.size}
                                                    color={props.icon.color}/>
@@ -344,10 +350,9 @@ const VideoPlayer = (tempProps: Props) => {
                             <DoubleClick
                                 singleTap={singleTapOnMiddleBtn}
                                 doubleTap={doubleTapOnMiddleBtn}
+                                longPress={longPressOnMiddleBtn}
                                 delay={200}
                             >
-
-
                                 <View>
                                     {playbackInstanceInfo.state === PlaybackStates.Buffering &&
                                     (props.icon.loading || <ActivityIndicator {...props.activityIndicator} />)}
@@ -372,7 +377,6 @@ const VideoPlayer = (tempProps: Props) => {
                                         />
                                     )}
                                 </View>
-
                             </DoubleClick>
                             <TouchableButton style={styles.touchableBtnSide} onPress={() => {
                                 shiftPosition(DEFAULT_STEP_SIZE)
