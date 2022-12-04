@@ -124,4 +124,5 @@ type DefaultProps = {
 
   onTriggerFullscreen?: () => void
   onCancelFullscreen?: () => void
+  onLongPressOnMiddleBtn?: (playbackInstance: any) => void
 }

@@ -234,11 +234,9 @@ const VideoPlayer = (tempProps: Props) => {
         toggleFullscreen();
     }
     const longPressOnMiddleBtn = () => {
-        console.log('VideoPlayer longPressOnMiddleBtn');
+        !props.onLongPressOnMiddleBtn || props.onLongPressOnMiddleBtn(playbackInstance);
     }
     const toggleFullscreen = () => {
-        console.log('VideoPlayer toggleFullscreen');
-
         if (isFullscreenActive) {
             setIsFullscreenActive(false);
             !props.onCancelFullscreen || props.onCancelFullscreen();
@@ -246,8 +244,6 @@ const VideoPlayer = (tempProps: Props) => {
             setIsFullscreenActive(true);
             !props.onTriggerFullscreen || props.onTriggerFullscreen();
         }
-
-
     }
 
     //
